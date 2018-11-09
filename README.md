@@ -26,7 +26,7 @@ its inverse is given by
 
 - Apply `\` to solve systems of the type `M * x = y`
     ```julia
-    julia> x = M \ y
+    julia> x = Mf \ y
     ```
 
 
