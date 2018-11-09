@@ -1,0 +1,10 @@
+name = "HyperDualMatrixTools"
+uuid = "484c5c94-e467-11e8-2c27-d92337250d85"
+authors = ["Benoit Pasquier <pasquieb@uci.edu>"]
+version = "0.1.0"
+
+[deps]
+HyperDualNumbers = "50ceba7f-c3ee-5a84-a6e8-3ad40456ec97"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+SparseArrays = "2f01184e-e22b-5df5-ae63-d93ebab69eaf"
+SuiteSparse = "4607b0f0-06f3-5cda-b6b1-a6196a1729e9"
