@@ -1,4 +1,4 @@
-using Documenter, HyperDualMatrixTools
+using Documenter, HyperDualMatrixTools, LinearAlgebra
 
 makedocs(
     sitename="HyperDualMatrixTools Documentation",
