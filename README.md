@@ -1,5 +1,10 @@
 # HyperDualMatrixTools.jl
 
+<p>
+  <a href="https://travis-ci.com/briochemc/HyperDualMatrixTools.jl"><img alt="Build Status" src="https://travis-ci.com/briochemc/HyperDualMatrixTools.jl.svg?branch=master"></a>
+  <a href="https://github.com/briochemc/HyperDualMatrixTools.jl/blob/master/LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
+</p>
+
 This module overloads `factorize` and `\` to work with hyperdual-valued arrays.
 
 It uses the HyperDualNumbers.jl package.
