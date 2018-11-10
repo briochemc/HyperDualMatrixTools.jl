@@ -117,6 +117,6 @@ end
 isapprox(x::Float64, y::Hyper256) = isapprox(hyper(x), y)
 isapprox(x::Hyper256, y::Float64) = isapprox(x, hyper(y))
 
-export ε₁, ε₂, ε₁ε₂, HyperDualFactors
+export ε₁, ε₂, ε₁ε₂, HyperDualFactors, factorize, \
 
 end # module
