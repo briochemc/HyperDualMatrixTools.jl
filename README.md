@@ -2,6 +2,8 @@
 
 <p>
   <a href="https://travis-ci.com/briochemc/HyperDualMatrixTools.jl"><img alt="Build Status" src="https://travis-ci.com/briochemc/HyperDualMatrixTools.jl.svg?branch=master"></a>
+  <a href="https://coveralls.io/github/briochemc/HyperDualMatrixTools?branch=master)"><img alt="Coverage Status" src="https://coveralls.io/repos/github/briochemc/HyperDualMatrixTools/badge.svg?branch=master"></a>
+  <a href="https://codecov.io/gh/briochemc/HyperDualMatrixTools"><img alt="Coverage Status" src="https://codecov.io/gh/briochemc/HyperDualMatrixTools/branch/master/graph/badge.svg"></a>
   <a href="https://github.com/briochemc/HyperDualMatrixTools.jl/blob/master/LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
 </p>
 
