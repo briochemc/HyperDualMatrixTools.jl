@@ -3,62 +3,54 @@ using Test
 using HyperDualMatrixTools
 using HyperDualNumbers, LinearAlgebra, SparseArrays, SuiteSparse
 
-n = 4
+# Check my definitions of hyperdual constants
+@test ε₁ == hyper(0.0, 1.0, 0.0, 0.0)
+@test ε₂ == hyper(0.0, 0.0, 1.0, 0.0)
+@test ε₁ε₂ == hyper(0.0, 0.0, 0.0, 1.0)
 
-A = rand(n, n)
-B = rand(n, n)
-C = rand(n, n)
-D = rand(n, n)
+# Chose a size for matrices
+n = 10
 
-hyperx = rand(n, n) * [1.0, ε₁, ε₂, ε₁ε₂]
-realx = rand(n)
+# Create a real-valued random vector and matrix
+y = randn(n)
+A = randn(n, n)
 
-hyperM = A + ε₁ * B + ε₂ * C + ε₁ε₂ * D
-realM = rand(n, n)
+# Create a hyperdual-valued random vector and matrix
+x = randn(n, 4) * [1.0, ε₁, ε₂, ε₁ε₂]
+B = randn(n, n)
+C = randn(n, n)
+D = randn(n, n)
+M = A + ε₁ * B + ε₂ * C + ε₁ε₂ * D
 
-realMrealx = realM * realx
-realMhyperx = realM * hyperx
-hyperMrealx = hyperM * realx
-hyperMhyperx = hyperM * hyperx
+# Check that `\` works for full matrices
+Af = factorize(A)
+Mf = factorize(M)
+@test Af \ (A * x) ≈ x
+@test Mf \ (M * x) ≈ x
+@test Af \ (A * y) ≈ y
+@test Mf \ (M * y) ≈ y
+@test A * (Af \ x) ≈ x
+@test M * (Mf \ x) ≈ x
+@test A * (Af \ y) ≈ y
+@test M * (Mf \ y) ≈ y
 
-# Solving `M * x = y` via `x = M \ y`
-realMfac = factorize(realM)
-hyperMfac = factorize(hyperM)
+# Create a real-valued sparse matrix
+A = sparse(randn(n, n))
 
-realx2 = realMfac \ realMrealx
-realx3 = hyperMfac \ hyperMrealx
-hyperx2 = realMfac \ realMhyperx
-hyperx3 = hyperMfac \ hyperMhyperx
+# Create a hyperdual-valued sparse matrix
+B = sparse(randn(n, n))
+C = sparse(randn(n, n))
+D = sparse(randn(n, n))
+M = A + ε₁ * B + ε₂ * C + ε₁ε₂ * D
 
-
-spA = sparse(rand(n, n))
-spB = sparse(rand(n, n))
-spC = sparse(rand(n, n))
-spD = sparse(rand(n, n))
-
-hyperspM = spA + ε₁ * spB + ε₂ * spC + ε₁ε₂ * spD
-realspM = sparse(rand(n, n))
-
-realspMrealx = realspM * realx
-realspMhyperx = realspM * hyperx
-hyperspMrealx = hyperspM * realx
-hyperspMhyperx = hyperspM * hyperx
-
-# Solving `spM * x = y` via `x = spM \ y`
-realspMfac = factorize(realspM)
-hyperspMfac = factorize(hyperspM)
-
-realspx2 = realspMfac \ realspMrealx
-realspx3 = hyperspMfac \ hyperspMrealx
-hyperspx2 = realspMfac \ realspMhyperx
-hyperspx3 = hyperspMfac \ hyperspMhyperx
-
-@test realx2 ≈ realx
-@test realx3 ≈ realx
-@test hyperx2 ≈ hyperx
-@test hyperx3 ≈ hyperx
-
-@test realspx2 ≈ realx
-@test realspx3 ≈ realx
-@test hyperspx2 ≈ hyperx
-@test hyperspx3 ≈ hyperx
+# Check that `\` works for sparse matrices
+Af = factorize(A)
+Mf = factorize(M)
+@test Af \ (A * x) ≈ x
+@test Mf \ (M * x) ≈ x
+@test Af \ (A * y) ≈ y
+@test Mf \ (M * y) ≈ y
+@test A * (Af \ x) ≈ x
+@test M * (Mf \ x) ≈ x
+@test A * (Af \ y) ≈ y
+@test M * (Mf \ y) ≈ y
