@@ -6,12 +6,15 @@ const ε₁ = hyper(0.0, 1.0, 0.0, 0.0)
 const ε₂ = hyper(0.0, 0.0, 1.0, 0.0)
 const ε₁ε₂ = ε₁ * ε₂
 
+import LinearAlgebra.factorize
+import Base.\
+
 """
     HyperDualFactors
 
 Container type to work efficiently with backslash on hyperdual-valued sparse matrices.
 
-`M = A + B ε₁ + C ε₂ + D ε₁ε₂` is stored in four fields:
+The factors of ``M = A + B \\varepsilon_1 + C \\varepsilon_2 + D \\varepsilon_1 \\varepsilon_2`` is stored in four fields:
 - `Af = factorize(real.(M))` to hold the factors of the real part
 - `B = eps1.(M)` to hold the non-real part
 - `C = eps2.(M)` to hold the non-real part
@@ -20,9 +23,7 @@ Container type to work efficiently with backslash on hyperdual-valued sparse mat
 This is because only the factors of the real part are needed, and factorization is costly.
 Therefore it is better to factorize `A` once and store those real-valued factors.
 The mathematical explanation for this is that
-```
-M⁻¹ = (I - ε₁ A⁻¹ B - ε₂ A⁻¹ C + ε₁ε₂ (-A⁻¹ D + A⁻¹ B A⁻¹ C + A⁻¹ C A⁻¹ B)) A⁻¹
-```
+\$M^{-1} = (I - \\varepsilon_1 A^{-1} B - \\varepsilon_2 A^{-1} C + \\varepsilon_1\\varepsilon_2 (-A^{-1} D + A^{-1} B A^{-1} C + A^{-1} C A^{-1} B)) A^{-1}\$
 """
 mutable struct HyperDualFactors
     Af # the factors of the real part
@@ -38,7 +39,7 @@ end
 Efficient factorization of hyperdual-valued sparse matrices.
 See `HyperDualFactors` for details.
 """
-function LinearAlgebra.factorize(M::Union{SparseMatrixCSC{Hyper{Float64},Int64}, Array{Hyper{Float64},2}})
+function factorize(M::Union{SparseMatrixCSC{Hyper{Float64},Int64}, Array{Hyper{Float64},2}})
     return HyperDualFactors(factorize(real.(M)), eps1.(M), eps2.(M), eps1eps2.(M))
 end
 
@@ -48,7 +49,7 @@ end
 Backsubstitution for `HyperDualFactors`.
 See `HyperDualFactors` for details.
 """
-function Base.:\(M::HyperDualFactors, y::AbstractVecOrMat{Float64})
+function \(M::HyperDualFactors, y::AbstractVecOrMat{Float64})
     A, B, C, D = M.Af, M.B, M.C, M.D
     A⁻¹y = A \ y
     DA⁻¹y = D * A⁻¹y
@@ -64,7 +65,7 @@ end
 Backsubstitution for `HyperDualFactors`.
 See `HyperDualFactors` for details.
 """
-function Base.:\(M::HyperDualFactors, y::AbstractVecOrMat{Hyper{Float64}})
+function \(M::HyperDualFactors, y::AbstractVecOrMat{Hyper{Float64}})
     a, b, c, d = real.(y), eps1.(y), eps2.(y), eps1eps2.(y)
     A, B, C, D = M.Af, M.B, M.C, M.D
     A⁻¹a = A \ a
@@ -86,7 +87,7 @@ end
 
 Backsubstitution for HyperDual-valued RHS.
 """
-function Base.:\(Af::Union{SuiteSparse.UMFPACK.UmfpackLU{Float64,Int64}, LU{Float64,Array{Float64,2}}}, y::AbstractVecOrMat{Hyper{Float64}})
+function \(Af::Union{SuiteSparse.UMFPACK.UmfpackLU{Float64,Int64}, LU{Float64,Array{Float64,2}}}, y::AbstractVecOrMat{Hyper{Float64}})
     return (Af \ real.(y)) + ε₁ * (Af \ eps1.(y)) + ε₂ * (Af \ eps2.(y)) + ε₁ε₂ * (Af \ eps1eps2.(y))
 end
 
