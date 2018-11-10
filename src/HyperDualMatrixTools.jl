@@ -14,14 +14,15 @@ import Base.\
 
 Container type to work efficiently with backslash on hyperdual-valued sparse matrices.
 
-For a hyperdual-valued matrix `M`, `factorize(M)` will create an instance containing:
+`factorize(M)` will create an instance containing
 - `Af = factorize(real.(M))` — the factors of the real part
 - `B = eps1.(M)` — the ``\\varepsilon_1`` part
 - `C = eps2.(M)` — the ``\\varepsilon_2`` part
 - `D = eps1eps2.(M)` — the ``\\varepsilon_1\\varepsilon_2`` part
+for a hyperdual-valued matrix `M`.
 
 This is because only the factors of the real part are needed when solving a linear system of the type ``M x = b`` for a hyperdual-valued matrix ``M = A + B \\varepsilon_1 + C \\varepsilon_2 + D \\varepsilon_1 \\varepsilon_2``.
-In fact, the invers of ``M`` is simply given by
+In fact, the inverse of ``M`` is given by
 ``M^{-1} = (I - \\varepsilon_1 A^{-1} B - \\varepsilon_2 A^{-1} C + \\varepsilon_1\\varepsilon_2 (-A^{-1} D + A^{-1} B A^{-1} C + A^{-1} C A^{-1} B)) A^{-1}``.
 """
 mutable struct HyperDualFactors
@@ -33,7 +34,7 @@ end
 
 
 """
-    factorize(M::SparseMatrixCSC{Hyper{Float64},Int64})
+    factorize(M::Union{SparseMatrixCSC{Hyper{Float64},Int64}, Array{Hyper{Float64},2}})
 
 Efficient factorization of hyperdual-valued sparse matrices.
 See `HyperDualFactors` for details.
