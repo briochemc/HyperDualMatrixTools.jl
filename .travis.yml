@@ -23,5 +23,5 @@ notifications:
 #  - julia -e 'Pkg.clone(pwd()); Pkg.build("HyperDualMatrixTools"); Pkg.test("HyperDualMatrixTools"; coverage=true)';
 
 after_success:
-  - julia -e 'cd(Pkg.dir("HyperDualMatrixTools")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())';
-  - julia -e 'cd(Pkg.dir("HyperDualMatrixTools")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())';
+  - julia -e 'using Pkg; cd(Pkg.dir("HyperDualMatrixTools")); Pkg.add("Coverage"); using Coverage; Coveralls.submit(Coveralls.process_folder())';
+  - julia -e 'using Pkg; cd(Pkg.dir("HyperDualMatrixTools")); Pkg.add("Coverage"); using Coverage; Codecov.submit(Codecov.process_folder())';
