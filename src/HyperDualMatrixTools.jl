@@ -14,16 +14,15 @@ import Base.\
 
 Container type to work efficiently with backslash on hyperdual-valued sparse matrices.
 
-The factors of ``M = A + B \\varepsilon_1 + C \\varepsilon_2 + D \\varepsilon_1 \\varepsilon_2`` is stored in four fields:
-- `Af = factorize(real.(M))` to hold the factors of the real part
-- `B = eps1.(M)` to hold the non-real part
-- `C = eps2.(M)` to hold the non-real part
-- `D = eps1eps2.(M)` to hold the non-real part
+For a hyperdual-valued matrix `M`, `factorize(M)` will create an instance containing:
+- `Af = factorize(real.(M))` — the factors of the real part
+- `B = eps1.(M)` — the ``\\varepsilon_1`` part
+- `C = eps2.(M)` — the ``\\varepsilon_2`` part
+- `D = eps1eps2.(M)` — the ``\\varepsilon_1\\varepsilon_2`` part
 
-This is because only the factors of the real part are needed, and factorization is costly.
-Therefore it is better to factorize `A` once and store those real-valued factors.
-The mathematical explanation for this is that
-\$M^{-1} = (I - \\varepsilon_1 A^{-1} B - \\varepsilon_2 A^{-1} C + \\varepsilon_1\\varepsilon_2 (-A^{-1} D + A^{-1} B A^{-1} C + A^{-1} C A^{-1} B)) A^{-1}\$
+This is because only the factors of the real part are needed when solving a linear system of the type ``M x = b`` for a hyperdual-valued matrix ``M = A + B \\varepsilon_1 + C \\varepsilon_2 + D \\varepsilon_1 \\varepsilon_2``.
+In fact, the invers of ``M`` is simply given by
+``M^{-1} = (I - \\varepsilon_1 A^{-1} B - \\varepsilon_2 A^{-1} C + \\varepsilon_1\\varepsilon_2 (-A^{-1} D + A^{-1} B A^{-1} C + A^{-1} C A^{-1} B)) A^{-1}``.
 """
 mutable struct HyperDualFactors
     Af # the factors of the real part
