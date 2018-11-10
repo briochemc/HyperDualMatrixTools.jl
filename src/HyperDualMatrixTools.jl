@@ -8,6 +8,7 @@ const ε₁ε₂ = ε₁ * ε₂
 
 import LinearAlgebra.factorize
 import Base.\
+import Base.isapprox
 
 """
     HyperDualFactors
@@ -23,28 +24,38 @@ for a hyperdual-valued matrix `M`.
 
 This is because only the factors of the real part are needed when solving a linear system of the type ``M x = b`` for a hyperdual-valued matrix ``M = A + B \\varepsilon_1 + C \\varepsilon_2 + D \\varepsilon_1 \\varepsilon_2``.
 In fact, the inverse of ``M`` is given by
-``M^{-1} = (I - \\varepsilon_1 A^{-1} B - \\varepsilon_2 A^{-1} C + \\varepsilon_1\\varepsilon_2 (-A^{-1} D + A^{-1} B A^{-1} C + A^{-1} C A^{-1} B)) A^{-1}``.
+``M^{-1} = (I - \\varepsilon_1 A^{-1} B - \\varepsilon_2 A^{-1} C - \\varepsilon_1\\varepsilon_2 A^{-1} (D - B A^{-1} C - C A^{-1} B)) A^{-1}``.
 """
 mutable struct HyperDualFactors
-    Af # the factors of the real part
-    B  # the ε₁ part
-    C  # the ε₂ part
-    D  # the ε₁ε₂ part
+    Af::Factorization # the factors of the real part
+    B                 # the ε₁ part
+    C                 # the ε₂ part
+    D                 # the ε₁ε₂ part
 end
 
 
 """
-    factorize(M::Union{SparseMatrixCSC{Hyper{Float64},Int64}, Array{Hyper{Float64},2}})
+    factorize(M::Array{Hyper256,2})
 
-Efficient factorization of hyperdual-valued sparse matrices.
+Efficient factorization of hyperdual-valued matrices.
 See `HyperDualFactors` for details.
 """
-function factorize(M::Union{SparseMatrixCSC{Hyper{Float64},Int64}, Array{Hyper{Float64},2}})
+function factorize(M::Array{Hyper256,2})
     return HyperDualFactors(factorize(real.(M)), eps1.(M), eps2.(M), eps1eps2.(M))
 end
 
 """
-    \\(M::HyperDualFactors, a::AbstractVecOrMat{Float64})
+    factorize(M::SparseMatrixCSC{Hyper256,Int64})
+
+Efficient factorization of hyperdual-valued sparse matrices.
+See `HyperDualFactors` for details.
+"""
+function factorize(M::SparseMatrixCSC{Hyper256,Int64})
+    return HyperDualFactors(factorize(real.(M)), eps1.(M), eps2.(M), eps1eps2.(M))
+end
+
+"""
+    \\(M::HyperDualFactors, y::AbstractVecOrMat{Float64})
 
 Backsubstitution for `HyperDualFactors`.
 See `HyperDualFactors` for details.
@@ -60,12 +71,12 @@ function \(M::HyperDualFactors, y::AbstractVecOrMat{Float64})
 end
 
 """
-    \\(M::HyperDualFactors, y::AbstractVecOrMat{HyperDual{Float64}})
+    \\(M::HyperDualFactors, y::AbstractVecOrMat{Hyper256})
 
 Backsubstitution for `HyperDualFactors`.
 See `HyperDualFactors` for details.
 """
-function \(M::HyperDualFactors, y::AbstractVecOrMat{Hyper{Float64}})
+function \(M::HyperDualFactors, y::AbstractVecOrMat{Hyper256})
     a, b, c, d = real.(y), eps1.(y), eps2.(y), eps1eps2.(y)
     A, B, C, D = M.Af, M.B, M.C, M.D
     A⁻¹a = A \ a
@@ -83,28 +94,28 @@ function \(M::HyperDualFactors, y::AbstractVecOrMat{Hyper{Float64}})
 end
 
 """
-    \\(Af::SuiteSparse.UMFPACK.UmfpackLU{Float64,Int64}, y::AbstractVecOrMat{HyperDual{Float64}})
+    \\(Af::Factorization{Float64}, y::AbstractVecOrMat{Hyper256})
 
 Backsubstitution for HyperDual-valued RHS.
 """
-function \(Af::Union{SuiteSparse.UMFPACK.UmfpackLU{Float64,Int64}, LU{Float64,Array{Float64,2}}}, y::AbstractVecOrMat{Hyper{Float64}})
+function \(Af::Factorization{Float64}, y::AbstractVecOrMat{Hyper256})
     return (Af \ real.(y)) + ε₁ * (Af \ eps1.(y)) + ε₂ * (Af \ eps2.(y)) + ε₁ε₂ * (Af \ eps1eps2.(y))
 end
 
-function Base.isapprox(x::AbstractVecOrMat{Hyper{Float64}}, y::AbstractVecOrMat{Hyper{Float64}})
+function isapprox(x::AbstractVecOrMat{Hyper256}, y::AbstractVecOrMat{Hyper256})
     bigx = [real.(x) eps1.(x) eps2.(x) eps1eps2.(x)]
     bigy = [real.(y) eps1.(y) eps2.(y) eps1eps2.(y)]
     return isapprox(bigx, bigy)
 end
-Base.isapprox(x::AbstractVecOrMat, y::AbstractVecOrMat{Hyper{Float64}}) = isapprox(hyper.(x), y)
-Base.isapprox(x::AbstractVecOrMat{Hyper{Float64}}, y::AbstractVecOrMat) = isapprox(x, hyper.(y))
-function Base.isapprox(x::Hyper{Float64}, y::Hyper{Float64})
+isapprox(x::AbstractVecOrMat, y::AbstractVecOrMat{Hyper256}) = isapprox(hyper.(x), y)
+isapprox(x::AbstractVecOrMat{Hyper256}, y::AbstractVecOrMat) = isapprox(x, hyper.(y))
+function isapprox(x::Hyper256, y::Hyper256)
     bigx = [real(x) eps1(x) eps2(x) eps1eps2(x)]
     bigy = [real(y) eps1(y) eps2(y) eps1eps2(y)]
     return isapprox(bigx, bigy)
 end
-Base.isapprox(x::Float64, y::Hyper{Float64}) = isapprox(hyper(x), y)
-Base.isapprox(x::Hyper{Float64}, y::Float64) = isapprox(x, hyper(y))
+isapprox(x::Float64, y::Hyper256) = isapprox(hyper(x), y)
+isapprox(x::Hyper256, y::Float64) = isapprox(x, hyper(y))
 
 export ε₁, ε₂, ε₁ε₂, HyperDualFactors
 
