@@ -1,10 +1,18 @@
 # HyperDualMatrixTools.jl
 
 <p>
-  <a href="https://travis-ci.com/briochemc/HyperDualMatrixTools.jl"><img alt="Build Status" src="https://travis-ci.com/briochemc/HyperDualMatrixTools.jl.svg?branch=master"></a>
-  <a href='https://coveralls.io/github/briochemc/HyperDualMatrixTools.jl?branch=master'><img src='https://coveralls.io/repos/github/briochemc/HyperDualMatrixTools.jl/badge.svg?branch=master' alt='Coverage Status' /></a>
-  <a href="https://codecov.io/gh/briochemc/HyperDualMatrixTools"><img alt="Coverage Status" src="https://codecov.io/gh/briochemc/HyperDualMatrixTools/branch/master/graph/badge.svg"></a>
-  <a href="https://github.com/briochemc/HyperDualMatrixTools.jl/blob/master/LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg"></a>
+  <a href="https://travis-ci.com/briochemc/HyperDualMatrixTools.jl">
+    <img alt="Build Status" src="https://travis-ci.com/briochemc/HyperDualMatrixTools.jl.svg?branch=master">
+  </a>
+  <a href='https://coveralls.io/github/briochemc/HyperDualMatrixTools.jl?branch=master'>
+    <img src='https://coveralls.io/repos/github/briochemc/HyperDualMatrixTools.jl/badge.svg?branch=master' alt='Coverage Status' />
+  </a>
+  <a href="https://codecov.io/gh/briochemc/HyperDualMatrixTools.jl">
+    <img src="https://codecov.io/gh/briochemc/HyperDualMatrixTools.jl/branch/master/graph/badge.svg" />
+  </a>
+  <a href="https://github.com/briochemc/HyperDualMatrixTools.jl/blob/master/LICENSE">
+    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg">
+  </a>
 </p>
 
 This module overloads `factorize` and `\` to work with hyperdual-valued arrays.
