@@ -22,7 +22,7 @@ Container type to work efficiently with backslash on hyperdual-valued sparse mat
 - `D = eps1eps2.(M)` — the ``\\varepsilon_1\\varepsilon_2`` part
 for a hyperdual-valued matrix `M`.
 
-This is because only the factors of the real part are needed when solving a linear system of the type ``M x = b`` for a hyperdual-valued matrix ``M = A + B \\varepsilon_1 + C \\varepsilon_2 + D \\varepsilon_1 \\varepsilon_2``.
+This is because only the factors of the real part are needed when solving a linear system of the type ``M x = b`` for a hyperdual-valued matrix ``M = A + \\varepsilon_1 B + \\varepsilon_2 C + \\varepsilon_1 \\varepsilon_2 D``.
 In fact, the inverse of ``M`` is given by
 ``M^{-1} = (I - \\varepsilon_1 A^{-1} B - \\varepsilon_2 A^{-1} C - \\varepsilon_1\\varepsilon_2 A^{-1} (D - B A^{-1} C - C A^{-1} B)) A^{-1}``.
 """
