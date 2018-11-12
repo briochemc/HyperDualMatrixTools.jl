@@ -5,3 +5,7 @@ makedocs(
     # options
     modules = [HyperDualMatrixTools]
 )
+
+deploydocs(
+    repo = "github.com/briochemc/HyperDualMatrixTools.jl.git",
+)
