@@ -1,6 +1,9 @@
 # HyperDualMatrixTools.jl
 
 <p>
+  <a href="https://briochemc.github.io/HyperDualMatrixTools.jl/stable">
+    <img src=https://img.shields.io/badge/docs-stable-blue.svg>
+  </a>
   <a href="https://travis-ci.com/briochemc/HyperDualMatrixTools.jl">
     <img alt="Build Status" src="https://travis-ci.com/briochemc/HyperDualMatrixTools.jl.svg?branch=master">
   </a>
