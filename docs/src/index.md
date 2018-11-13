@@ -50,7 +50,7 @@ HyperDualFactors
 
 Apply `\` to solve systems of the type `M * x = y`
 ```jldoctest usage
-y = rand(4, 4) * [1.0, ε₁, ε₂, ε₁ε₂]
+y = rand(n, 4) * [1.0, ε₁, ε₂, ε₁ε₂]
 x = Mf \ y
 M * x ≈ y
 
