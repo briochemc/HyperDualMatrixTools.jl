@@ -37,7 +37,7 @@ var documenterSearchIndex = {"docs": [
     "page": "HyperDualMatrixTools.jl Documentation",
     "title": "Usage",
     "category": "section",
-    "text": "DocTestSetup = quote\n    using HyperDualMatrixTools\nendCreate your hyperdual-valued matrix M:n = 4\nA, B, C, D = rand(n, n), randn(n, n), rand(n, n), randn(n, n)\nM = A + ε₁ * B + ε₂ * C + ε₁ε₂ * D\ntypeof(M)\n\n# output\n\nArray{HyperDualNumbers.Hyper{Float64},2}(The ε₁, ε₂, and ε₁ε₂ constants are provided by HyperDualMatrixTools.jl for convenience.)Factorize M:Mf = factorize(M)\ntypeof(Mf)\n\n# output\n\nHyperDualFactorsApply \\ to solve systems of the type M * x = yy = rand(4, 4) * [1.0, ε₁, ε₂, ε₁ε₂]\nx = Mf \\ y\nM * x ≈ y\n\n# output\n\ntrue"
+    "text": "DocTestSetup = quote\n    using HyperDualMatrixTools\nendCreate your hyperdual-valued matrix M:n = 4\nA, B, C, D = rand(n, n), randn(n, n), rand(n, n), randn(n, n)\nM = A + ε₁ * B + ε₂ * C + ε₁ε₂ * D\ntypeof(M)\n\n# output\n\nArray{HyperDualNumbers.Hyper{Float64},2}(The ε₁, ε₂, and ε₁ε₂ constants are provided by HyperDualMatrixTools.jl for convenience.)Factorize M:Mf = factorize(M)\ntypeof(Mf)\n\n# output\n\nHyperDualFactorsApply \\ to solve systems of the type M * x = yy = rand(n, 4) * [1.0, ε₁, ε₂, ε₁ε₂]\nx = Mf \\ y\nM * x ≈ y\n\n# output\n\ntrue"
 },
 
 {
