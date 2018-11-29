@@ -2,10 +2,6 @@ module HyperDualMatrixTools
 
 using HyperDualNumbers, LinearAlgebra, SparseArrays, SuiteSparse
 
-const ε₁ = hyper(0.0, 1.0, 0.0, 0.0)
-const ε₂ = hyper(0.0, 0.0, 1.0, 0.0)
-const ε₁ε₂ = ε₁ * ε₂
-
 import LinearAlgebra.factorize
 import Base.\
 import Base.isapprox
@@ -117,6 +113,6 @@ end
 isapprox(x::Float64, y::Hyper256) = isapprox(hyper(x), y)
 isapprox(x::Hyper256, y::Float64) = isapprox(x, hyper(y))
 
-export ε₁, ε₂, ε₁ε₂, HyperDualFactors, factorize, \
+export HyperDualFactors, factorize, \
 
 end # module
