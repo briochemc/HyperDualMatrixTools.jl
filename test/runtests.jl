@@ -3,11 +3,6 @@ using Test
 using HyperDualMatrixTools
 using HyperDualNumbers, LinearAlgebra, SparseArrays, SuiteSparse
 
-# Check my definitions of hyperdual constants
-@test ε₁ == hyper(0.0, 1.0, 0.0, 0.0)
-@test ε₂ == hyper(0.0, 0.0, 1.0, 0.0)
-@test ε₁ε₂ == hyper(0.0, 0.0, 0.0, 1.0)
-
 # Chose a size for matrices
 n = 10
 
