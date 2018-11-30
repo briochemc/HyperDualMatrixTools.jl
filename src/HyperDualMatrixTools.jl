@@ -12,10 +12,10 @@ import Base.isapprox
 Container type to work efficiently with backslash on hyperdual-valued sparse matrices.
 
 `factorize(M)` will create an instance containing
-- `Af = factorize(real.(M))` — the factors of the real part
-- `B = eps1.(M)` — the ``\\varepsilon_1`` part
-- `C = eps2.(M)` — the ``\\varepsilon_2`` part
-- `D = eps1eps2.(M)` — the ``\\varepsilon_1\\varepsilon_2`` part
+- `Af = factorize(realpart.(M))` — the factors of the real part
+- `B = ε₁part.(M)` — the ``\\varepsilon_1`` part
+- `C = ε₂part.(M)` — the ``\\varepsilon_2`` part
+- `D = ε₁ε₂part.(M)` — the ``\\varepsilon_1\\varepsilon_2`` part
 for a hyperdual-valued matrix `M`.
 
 This is because only the factors of the real part are needed when solving a linear system of the type ``M x = b`` for a hyperdual-valued matrix ``M = A + \\varepsilon_1 B + \\varepsilon_2 C + \\varepsilon_1 \\varepsilon_2 D``.
@@ -37,7 +37,7 @@ Efficient factorization of hyperdual-valued matrices.
 See `HyperDualFactors` for details.
 """
 function factorize(M::Array{Hyper256,2})
-    return HyperDualFactors(factorize(real.(M)), eps1.(M), eps2.(M), eps1eps2.(M))
+    return HyperDualFactors(factorize(realpart.(M)), ε₁part.(M), ε₂part.(M), ε₁ε₂part.(M))
 end
 
 """
@@ -47,7 +47,7 @@ Efficient factorization of hyperdual-valued sparse matrices.
 See `HyperDualFactors` for details.
 """
 function factorize(M::SparseMatrixCSC{Hyper256,Int64})
-    return HyperDualFactors(factorize(real.(M)), eps1.(M), eps2.(M), eps1eps2.(M))
+    return HyperDualFactors(factorize(realpart.(M)), ε₁part.(M), ε₂part.(M), ε₁ε₂part.(M))
 end
 
 """
@@ -73,7 +73,7 @@ Backsubstitution for `HyperDualFactors`.
 See `HyperDualFactors` for details.
 """
 function \(M::HyperDualFactors, y::AbstractVecOrMat{Hyper256})
-    a, b, c, d = real.(y), eps1.(y), eps2.(y), eps1eps2.(y)
+    a, b, c, d = realpart.(y), ε₁part.(y), ε₂part.(y), ε₁ε₂part.(y)
     A, B, C, D = M.Af, M.B, M.C, M.D
     A⁻¹a = A \ a
     DA⁻¹a = D * A⁻¹a
@@ -95,19 +95,19 @@ end
 Backsubstitution for HyperDual-valued RHS.
 """
 function \(Af::Factorization{Float64}, y::AbstractVecOrMat{Hyper256})
-    return (Af \ real.(y)) + ε₁ * (Af \ eps1.(y)) + ε₂ * (Af \ eps2.(y)) + ε₁ε₂ * (Af \ eps1eps2.(y))
+    return (Af \ realpart.(y)) + ε₁ * (Af \ ε₁part.(y)) + ε₂ * (Af \ ε₂part.(y)) + ε₁ε₂ * (Af \ ε₁ε₂part.(y))
 end
 
 function isapprox(x::AbstractVecOrMat{Hyper256}, y::AbstractVecOrMat{Hyper256})
-    bigx = [real.(x) eps1.(x) eps2.(x) eps1eps2.(x)]
-    bigy = [real.(y) eps1.(y) eps2.(y) eps1eps2.(y)]
+    bigx = [realpart.(x) ε₁part.(x) ε₂part.(x) ε₁ε₂part.(x)]
+    bigy = [realpart.(y) ε₁part.(y) ε₂part.(y) ε₁ε₂part.(y)]
     return isapprox(bigx, bigy)
 end
 isapprox(x::AbstractVecOrMat, y::AbstractVecOrMat{Hyper256}) = isapprox(hyper.(x), y)
 isapprox(x::AbstractVecOrMat{Hyper256}, y::AbstractVecOrMat) = isapprox(x, hyper.(y))
 function isapprox(x::Hyper256, y::Hyper256)
-    bigx = [real(x) eps1(x) eps2(x) eps1eps2(x)]
-    bigy = [real(y) eps1(y) eps2(y) eps1eps2(y)]
+    bigx = [realpart(x) ε₁part(x) ε₂part(x) ε₁ε₂part(x)]
+    bigy = [realpart(y) ε₁part(y) ε₂part(y) ε₁ε₂part(y)]
     return isapprox(bigx, bigy)
 end
 isapprox(x::Float64, y::Hyper256) = isapprox(hyper(x), y)
