@@ -69,7 +69,7 @@ var documenterSearchIndex = {"docs": [
     "page": "HyperDualMatrixTools.jl Documentation",
     "title": "HyperDualMatrixTools.HyperDualFactors",
     "category": "type",
-    "text": "HyperDualFactors\n\nContainer type to work efficiently with backslash on hyperdual-valued sparse matrices.\n\nfactorize(M) will create an instance containing\n\nAf = factorize(real.(M)) — the factors of the real part\nB = eps1.(M) — the varepsilon_1 part\nC = eps2.(M) — the varepsilon_2 part\nD = eps1eps2.(M) — the varepsilon_1varepsilon_2 part\n\nfor a hyperdual-valued matrix M.\n\nThis is because only the factors of the real part are needed when solving a linear system of the type M x = b for a hyperdual-valued matrix M = A + varepsilon_1 B + varepsilon_2 C + varepsilon_1 varepsilon_2 D. In fact, the inverse of M is given by M^-1 = (I - varepsilon_1 A^-1 B - varepsilon_2 A^-1 C - varepsilon_1varepsilon_2 A^-1 (D - B A^-1 C - C A^-1 B)) A^-1.\n\n\n\n\n\n"
+    "text": "HyperDualFactors\n\nContainer type to work efficiently with backslash on hyperdual-valued sparse matrices.\n\nfactorize(M) will create an instance containing\n\nAf = factorize(realpart.(M)) — the factors of the real part\nB = ε₁part.(M) — the varepsilon_1 part\nC = ε₂part.(M) — the varepsilon_2 part\nD = ε₁ε₂part.(M) — the varepsilon_1varepsilon_2 part\n\nfor a hyperdual-valued matrix M.\n\nThis is because only the factors of the real part are needed when solving a linear system of the type M x = b for a hyperdual-valued matrix M = A + varepsilon_1 B + varepsilon_2 C + varepsilon_1 varepsilon_2 D. In fact, the inverse of M is given by M^-1 = (I - varepsilon_1 A^-1 B - varepsilon_2 A^-1 C - varepsilon_1varepsilon_2 A^-1 (D - B A^-1 C - C A^-1 B)) A^-1.\n\n\n\n\n\n"
 },
 
 {
