@@ -40,7 +40,6 @@ This package should be useful for evaluation of second derivatives of functions 
     ```julia
     julia> M = A + ε₁ * B + ε₂ * C + ε₁ε₂ * D
     ```
-    (The `ε₁`, `ε₂`, and `ε₁ε₂` constants are defined for convenience here.)
 
 - Factorize `M`:
     ```julia
