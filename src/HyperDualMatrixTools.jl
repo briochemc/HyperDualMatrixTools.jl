@@ -46,7 +46,7 @@ end
 Efficient factorization of hyperdual-valued sparse matrices.
 See `HyperDualFactors` for details.
 """
-function factorize(M::SparseMatrixCSC{Hyper256,Int64})
+function factorize(M::SparseMatrixCSC{Hyper256, T}) where {T}
     return HyperDualFactors(factorize(realpart.(M)), ε₁part.(M), ε₂part.(M), ε₁ε₂part.(M))
 end
 
