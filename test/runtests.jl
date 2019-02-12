@@ -61,7 +61,7 @@ using HyperDualNumbers, LinearAlgebra, SparseArrays, SuiteSparse
         # Create a real-valued sparse matrix
         A = sparse(randn(n, n))
         # Create a hyperdual-valued sparse matrix
-        A2 = A .+ ε₁
+        A2 = A .+ 0ε₁
 
         @test A2 ≈ A
         @test A ≈ A2
