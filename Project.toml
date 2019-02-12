@@ -1,7 +1,7 @@
 name = "HyperDualMatrixTools"
-uuid = "484c5c94-e467-11e8-2c27-d92337250d85"
+uuid = "04d39a18-1502-5db8-a704-9ca743349cef"
 authors = ["Benoit Pasquier <pasquieb@uci.edu>"]
-version = "1.0.0"
+version = "1.0.1"
 
 [deps]
 HyperDualNumbers = "50ceba7f-c3ee-5a84-a6e8-3ad40456ec97"
