@@ -2,9 +2,23 @@ module HyperDualMatrixTools
 
 using HyperDualNumbers, LinearAlgebra, SparseArrays, SuiteSparse
 
-import LinearAlgebra.factorize
-import Base.\
-import Base.isapprox
+# Personal add-on: Allow for multiplication by ε of a sparse matrix
+import Base.*
+"""
+    *(d::Hyper, M::SparseMatrixCSC)
+
+Exactly multiplies a sparse matrix `M` by the hyperdual number `d`.
+This overload allows, e.g., `ε₁ * M` to be non-zero.
+(This is to correct the effect of, e.g., the `ε₁ == 0` feature in HyperDualNumbers.jl,
+which silently removes non-zeros from sparse matrices when multiplied by `ε₁`.)
+"""
+function *(h::Hyper, M::SparseMatrixCSC)
+    i, j, v = findnz(M)
+    m, n = size(M)
+    return sparse(i, j, h .* v, m, n)
+end
+export *
+
 
 """
     HyperDualFactors
@@ -22,34 +36,61 @@ This is because only the factors of the real part are needed when solving a line
 In fact, the inverse of ``M`` is given by
 ``M^{-1} = (I - \\varepsilon_1 A^{-1} B - \\varepsilon_2 A^{-1} C - \\varepsilon_1\\varepsilon_2 A^{-1} (D - B A^{-1} C - C A^{-1} B)) A^{-1}``.
 """
-mutable struct HyperDualFactors
-    Af::Factorization # the factors of the real part
-    B                 # the ε₁ part
-    C                 # the ε₂ part
-    D                 # the ε₁ε₂ part
+mutable struct HyperDualFactors{TAf,T}
+    Af::TAf # the factors of the real part
+    B ::T   # the ε₁ part
+    C ::T   # the ε₂ part
+    D ::T   # the ε₁ε₂ part
+end
+export HyperDualFactors
+
+# Factorization functions
+for f in (:lu, :qr, :cholesky, :factorize)
+    @eval begin
+        import LinearAlgebra: $f
+        """
+        $($f)(M::SparseMatrixCSC{<:Hyper,<:Int})
+
+        Invokes `$($f)` on just the real part of `M` and stores it along with the dual parts into a `HyperDualFactors` object.
+        """
+        $f(M::SparseMatrixCSC{<:Hyper,<:Int}) = HyperDualFactors($f(realpart.(M)), ε₁part.(M), ε₂part.(M), ε₁ε₂part.(M))
+        """
+        $($f)(M::Array{<:Hyper,2})
+
+        Invokes `$($f)` on just the real part of `M` and stores it along with the dual parts into a `HyperDualFactors` object.
+        """
+        $f(M::Array{<:Hyper,2}) = HyperDualFactors($f(realpart.(M)), ε₁part.(M), ε₂part.(M), ε₁ε₂part.(M))
+        export $f
+    end
 end
 
+# In-place factorization for the case where the real part is already stored
+function factorize!(Mf::HyperDualFactors, M; update_factors = false)
+    Mf.B = ε₁part.(M)
+    Mf.C = ε₂part.(M)
+    Mf.D = ε₁ε₂part.(M)
+    if update_factors
+        Mf.Af = factorize(realpart.(M))
+    end
+    return Mf
+end
+export factorize!
 
-"""
-    factorize(M::Array{Hyper256,2})
+# Adjoint and transpose definitions for `HyperDualFactors`
+for f in (:adjoint, :transpose)
+    @eval begin
+        import Base: $f
+        """
+        $($f)(M::HyperDualFactors)
 
-Efficient factorization of hyperdual-valued matrices.
-See `HyperDualFactors` for details.
-"""
-function factorize(M::Array{Hyper256,2})
-    return HyperDualFactors(factorize(realpart.(M)), ε₁part.(M), ε₂part.(M), ε₁ε₂part.(M))
+        Invokes `$($f)` on `M.Af`, `M.B`, `M.C`, and `M.D` and returns them into a new `HyperDualFactors` object.
+        """
+        $f(M::HyperDualFactors) = HyperDualFactors($f(M.Af), $f(M.B), $f(M.C), $f(M.D))
+        export $f
+    end
 end
 
-"""
-    factorize(M::SparseMatrixCSC{Hyper256,Int64})
-
-Efficient factorization of hyperdual-valued sparse matrices.
-See `HyperDualFactors` for details.
-"""
-function factorize(M::SparseMatrixCSC{Hyper256, <:Integer})
-    return HyperDualFactors(factorize(realpart.(M)), ε₁part.(M), ε₂part.(M), ε₁ε₂part.(M))
-end
-
+import Base.\
 """
     \\(M::HyperDualFactors, y::AbstractVecOrMat{Float64})
 
@@ -98,6 +139,16 @@ function \(Af::Factorization{Float64}, y::AbstractVecOrMat{Hyper256})
     return (Af \ realpart.(y)) + ε₁ * (Af \ ε₁part.(y)) + ε₂ * (Af \ ε₂part.(y)) + ε₁ε₂ * (Af \ ε₁ε₂part.(y))
 end
 
+"""
+    \\(M::AbstractArray{<:Hyper,2}, y::AbstractVecOrMat)
+
+Backslash (factorization and backsubstitution) for Dual-valued matrix `M`.
+"""
+\(M::SparseMatrixCSC{<:Hyper,<:Int}, y::AbstractVecOrMat) = factorize(M) \ y
+\(M::Array{<:Hyper,2}, y::AbstractVecOrMat) = factorize(M) \ y
+export \
+
+import Base.isapprox
 function isapprox(x::AbstractVecOrMat{Hyper256}, y::AbstractVecOrMat{Hyper256})
     bigx = [realpart.(x) ε₁part.(x) ε₂part.(x) ε₁ε₂part.(x)]
     bigy = [realpart.(y) ε₁part.(y) ε₂part.(y) ε₁ε₂part.(y)]
@@ -112,7 +163,5 @@ function isapprox(x::Hyper256, y::Hyper256)
 end
 isapprox(x::Float64, y::Hyper256) = isapprox(hyper(x), y)
 isapprox(x::Hyper256, y::Float64) = isapprox(x, hyper(y))
-
-export HyperDualFactors, factorize, \
 
 end # module
