@@ -45,7 +45,7 @@ var documenterSearchIndex = {"docs": [
     "page": "HyperDualMatrixTools.jl Documentation",
     "title": "LinearAlgebra.factorize",
     "category": "function",
-    "text": "factorize(M::Array{Hyper256,2})\n\nEfficient factorization of hyperdual-valued matrices. See HyperDualFactors for details.\n\n\n\n\n\nfactorize(M::SparseMatrixCSC{Hyper256,Int64})\n\nEfficient factorization of hyperdual-valued sparse matrices. See HyperDualFactors for details.\n\n\n\n\n\n"
+    "text": "LinearAlgebra.factorize(M::SparseMatrixCSC{<:Hyper,<:Int})\n\nInvokes LinearAlgebra.factorize on just the real part of M and stores it along with the dual parts into a HyperDualFactors object.\n\n\n\n\n\nLinearAlgebra.factorize(M::Array{<:Hyper,2})\n\nInvokes LinearAlgebra.factorize on just the real part of M and stores it along with the dual parts into a HyperDualFactors object.\n\n\n\n\n\n"
 },
 
 {
@@ -53,7 +53,7 @@ var documenterSearchIndex = {"docs": [
     "page": "HyperDualMatrixTools.jl Documentation",
     "title": "Base.:\\",
     "category": "function",
-    "text": "\\(M::HyperDualFactors, y::AbstractVecOrMat{Float64})\n\nBacksubstitution for HyperDualFactors. See HyperDualFactors for details.\n\n\n\n\n\n\\(M::HyperDualFactors, y::AbstractVecOrMat{Hyper256})\n\nBacksubstitution for HyperDualFactors. See HyperDualFactors for details.\n\n\n\n\n\n\\(Af::Factorization{Float64}, y::AbstractVecOrMat{Hyper256})\n\nBacksubstitution for HyperDual-valued RHS.\n\n\n\n\n\n"
+    "text": "\\(M::HyperDualFactors, y::AbstractVecOrMat{Float64})\n\nBacksubstitution for HyperDualFactors. See HyperDualFactors for details.\n\n\n\n\n\n\\(M::HyperDualFactors, y::AbstractVecOrMat{Hyper256})\n\nBacksubstitution for HyperDualFactors. See HyperDualFactors for details.\n\n\n\n\n\n\\(Af::Factorization{Float64}, y::AbstractVecOrMat{Hyper256})\n\nBacksubstitution for HyperDual-valued RHS.\n\n\n\n\n\n\\(M::AbstractArray{<:Hyper,2}, y::AbstractVecOrMat)\n\nBackslash (factorization and backsubstitution) for Dual-valued matrix M.\n\n\n\n\n\n"
 },
 
 {
