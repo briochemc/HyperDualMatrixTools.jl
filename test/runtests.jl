@@ -7,17 +7,17 @@ using HyperDualNumbers, LinearAlgebra, SparseArrays, SuiteSparse
     # Chose a size for matrices
     n = 10
 
-    x = randn(n)                    # real-valued      │
-    y = randn(n)                    # real-valued      │
-    z = randn(n)                    # real-valued      ├─ vector
-    w = randn(n)                    # real-valued      │
-    d = x + ε₁*y + ε₂*z + ε₁*ε₂*w   # hyperdual-valued │
+    x = randn(n)                 # real-valued      │
+    y = randn(n)                 # real-valued      │
+    z = randn(n)                 # real-valued      ├─ vector
+    w = randn(n)                 # real-valued      │
+    d = x + ε₁*y + ε₂*z + ε₁ε₂*w # hyperdual-valued │
 
-    A = randn(n, n)                 # real-valued      │
-    B = randn(n, n)                 # real-valued      │
-    C = randn(n, n)                 # real-valued      ├─ matrix
-    D = randn(n, n)                 # real-valued      │
-    M = A + ε₁*B + ε₂*C + ε₁*ε₂*D   # hyperdual-valued │
+    A = randn(n, n)              # real-valued      │
+    B = randn(n, n)              # real-valued      │
+    C = randn(n, n)              # real-valued      ├─ matrix
+    D = randn(n, n)              # real-valued      │
+    M = A + ε₁*B + ε₂*C + ε₁ε₂*D # hyperdual-valued │
 
     @testset "Testing full matrices" begin
         @testset "Testing `\\` without factorization" begin
@@ -68,7 +68,7 @@ using HyperDualNumbers, LinearAlgebra, SparseArrays, SuiteSparse
         spM = sparse(M)  # │
 
         @testset "Check that `ε * A` works" begin
-            @test spM ≈ spA + ε₁*spB + ε₂*spC + ε₁*ε₂*spD
+            @test spM ≈ spA + ε₁*spB + ε₂*spC + ε₁ε₂*spD
         end
 
         @testset "Check that `\\` works without factorization" begin
@@ -106,11 +106,11 @@ using HyperDualNumbers, LinearAlgebra, SparseArrays, SuiteSparse
         spM = sparse(M)  # │
 
         # Adjoints / transposes
-        x₂ = randn(n)     # real-valued │
-        y₂ = randn(n)     # real-valued │
-        z₂ = randn(n)     # real-valued ├─ vector
-        w₂ = randn(n)     # real-valued │
-        d₂ = x₂ + ε₁*y₂ + ε₂*z₂ + ε₁*ε₂*w₂    # dual-valued │
+        x₂ = randn(n)                     # real-valued │
+        y₂ = randn(n)                     # real-valued │
+        z₂ = randn(n)                     # real-valued ├─ vector
+        w₂ = randn(n)                     # real-valued │
+        d₂ = x₂ + ε₁*y₂ + ε₂*z₂ + ε₁ε₂*w₂ # dual-valued │
 
         @eval begin
             x₂′ = $f($x₂)

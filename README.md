@@ -57,6 +57,22 @@ This package should be useful for evaluation of second derivatives of functions 
     julia> x = Mf \ b
     ```
 
+## Advanced usage
 
+In the context of iterative processes with multiple factorizations and backsubstitutions, you may want to propagate hyperdual-valued numbers while leveraging (potentially) the fact the real part of the matrices to be factorized remains the same throughout.
+This package provides an in-place `factorize!`, with a flag to update (or not) the factors.
+Usage is straightforward.
+By default, `factorize!` does *not* update the factors
+```julia
+julia> factorize!(Mf, M) # only Mf.B, Mf.C, and Mf.D is updated
+```
+If you want to update the real-valued factors too, use
+```julia
+julia> factorize!(Mf, M, update_factors=true) # The factors in Mf.Af are also updated
+```
 
+## Citation
+
+If you use this package, please cite it!
+You can export the citation by first clicking on the DOI badge at the top, which links to the Zenodo record of the package, and then clicking on the citation format you want in the "Export" box at the bottom of the page.
 
