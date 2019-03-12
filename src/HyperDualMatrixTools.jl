@@ -97,14 +97,13 @@ import Base.\
 Backsubstitution for `HyperDualFactors`.
 See `HyperDualFactors` for details.
 """
-function \(M::HyperDualFactors, y::AbstractVecOrMat{Float64})
+function \(M::HyperDualFactors, a::AbstractVecOrMat{Float64})
     A, B, C, D = M.Af, M.B, M.C, M.D
-    A⁻¹y = A \ y
-    DA⁻¹y = D * A⁻¹y
-    A⁻¹BA⁻¹y = A \ (B * A⁻¹y)
-    A⁻¹CA⁻¹y = A \ (C * A⁻¹y)
-    return A⁻¹y - ε₁ * A⁻¹BA⁻¹y - ε₂ * A⁻¹CA⁻¹y - ε₁ε₂ * (A \ DA⁻¹y) +
-        ε₁ε₂ * (A \ (B * A⁻¹CA⁻¹y) + A \ (C * A⁻¹BA⁻¹y))
+    A⁻¹a = A \ a
+    _A⁻¹BA⁻¹a = A \ (-B * A⁻¹a)
+    _A⁻¹CA⁻¹a = A \ (-C * A⁻¹a)
+    return A⁻¹a + ε₁ * _A⁻¹BA⁻¹a + ε₂ * _A⁻¹CA⁻¹a +
+        ε₁ε₂ * (A \ (-D * A⁻¹a - C * _A⁻¹BA⁻¹a - B * _A⁻¹CA⁻¹a))
 end
 
 """
@@ -117,17 +116,10 @@ function \(M::HyperDualFactors, y::AbstractVecOrMat{Hyper256})
     a, b, c, d = realpart.(y), ε₁part.(y), ε₂part.(y), ε₁ε₂part.(y)
     A, B, C, D = M.Af, M.B, M.C, M.D
     A⁻¹a = A \ a
-    DA⁻¹a = D * A⁻¹a
-    A⁻¹BA⁻¹a = A \ (B * A⁻¹a)
-    A⁻¹CA⁻¹a = A \ (C * A⁻¹a)
-    A⁻¹b = A \ b
-    A⁻¹CA⁻¹b = A \ (C * A⁻¹b)
-    A⁻¹c = A \ c
-    A⁻¹BA⁻¹c = A \ (B * A⁻¹c)
-    A⁻¹d = A \ d
-    return A⁻¹a - ε₁ * A⁻¹BA⁻¹a - ε₂ * A⁻¹CA⁻¹a - ε₁ε₂ * (A \ DA⁻¹a) +
-        ε₁ε₂ * (A \ (B * A⁻¹CA⁻¹a) + A \ (C * A⁻¹BA⁻¹a)) +
-        ε₁ * A⁻¹b + ε₂ * A⁻¹c + ε₁ε₂ * A⁻¹d - ε₁ε₂ * (A⁻¹CA⁻¹b + A⁻¹BA⁻¹c)
+    A⁻¹b_A⁻¹BA⁻¹a = A \ (b - B * A⁻¹a)
+    A⁻¹c_A⁻¹CA⁻¹a = A \ (c - C * A⁻¹a)
+    return A⁻¹a + ε₁ * A⁻¹b_A⁻¹BA⁻¹a + ε₂ * A⁻¹c_A⁻¹CA⁻¹a +
+        ε₁ε₂ * (A \ (d - D * A⁻¹a - C * A⁻¹b_A⁻¹BA⁻¹a - B * A⁻¹c_A⁻¹CA⁻¹a))
 end
 
 """
