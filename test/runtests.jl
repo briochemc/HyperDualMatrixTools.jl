@@ -48,12 +48,12 @@ using HyperDualNumbers, LinearAlgebra, SparseArrays, SuiteSparse
     @testset "Inplace factorization" begin
         Mf1 =factorize(M)
         Mf2 = factorize(M)
-        factorize!(Mf2, 2M)
+        factorize(Mf2, 2M)
         @test Mf2.Af == Mf1.Af
         @test Mf2.B == 2Mf1.B
         @test Mf2.C == 2Mf1.C
         @test Mf2.D == 2Mf1.D
-        factorize!(Mf2, 2M, update_factors=true)
+        factorize(Mf2, 2M, update_factors=true)
         @test Mf2.Af ≠ Mf1.Af
         @test Mf2.B == 2Mf1.B
         @test Mf2.C == 2Mf1.C

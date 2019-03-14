@@ -65,7 +65,8 @@ for f in (:lu, :qr, :cholesky, :factorize)
 end
 
 # In-place factorization for the case where the real part is already stored
-function factorize!(Mf::HyperDualFactors, M; update_factors = false)
+import LinearAlgebra: factorize
+function factorize(Mf::HyperDualFactors, M; update_factors = false)
     Mf.B = ε₁part.(M)
     Mf.C = ε₂part.(M)
     Mf.D = ε₁ε₂part.(M)
@@ -74,7 +75,7 @@ function factorize!(Mf::HyperDualFactors, M; update_factors = false)
     end
     return Mf
 end
-export factorize!
+export factorize
 
 # Adjoint and transpose definitions for `HyperDualFactors`
 for f in (:adjoint, :transpose)
