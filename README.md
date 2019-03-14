@@ -60,7 +60,7 @@ Note that this package is the equivalent of the [DualMatrixTools.jl](https://git
 
 ## Advanced usage
 
-In the context of iterative processes with multiple factorizations and backsubstitutions, you may want to propagate hyperdual-valued numbers while leveraging (potentially) the fact the real part of the matrices to be factorized remains the same throughout.
+In the context of iterative processes with multiple factorizations and forward and back substitutions, you may want to propagate hyperdual-valued numbers while leveraging (potentially) the fact the real part of the matrices to be factorized remains the same throughout.
 This package provides an in-place `factorize`, with a flag to update (or not) the factors.
 Usage is straightforward.
 By default, `factorize` does *not* update the factors
