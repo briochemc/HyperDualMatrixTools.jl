@@ -1,3 +1,7 @@
+<a href="https://github.com/briochemc/HyperDualMatrixTools.jl">
+    <img src="https://user-images.githubusercontent.com/4486578/59239480-fa820300-8c44-11e9-8d98-56c1bf334a10.png", width="100%", align="center">
+                                                                                                                                               </a>
+
 # HyperDualMatrixTools.jl
 
 <p>
