@@ -1,4 +1,5 @@
-using Test
+using Test, Random
+Random.seed!(1234321)
 
 using HyperDualMatrixTools
 using HyperDualNumbers, LinearAlgebra, SparseArrays, SuiteSparse
